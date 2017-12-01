@@ -1,30 +1,40 @@
 import React, {Component} from 'react';
 import {
     ListView,
-    View, Dimensions, Alert
+    View,
+    Dimensions,
+    Alert,
+    Platform,
+    StyleSheet,
+    TouchableHighlight,
+    Text
 } from 'react-native'
 import {SessionManager} from '.././utilities/SessionManager';
 import {Screens} from '.././navigation/Screens';
 import Constants from '.././utilities/Constants';
 import {WebServiceCallManager} from '.././utilities/WebServiceCallManager';
 import RegisterCourseListView from "./RegisterCourseListView";
+import TextInputCustom from "../components/TextInputCustom";
 const {width, height} = Dimensions.get("window");
-
+const dismissKeyboard = require('dismissKeyboard');
 
 export default class RegisterCourseContainer extends Component {
 
     constructor(props) {
         super(props);
-
         const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+
         var courses;
-        if (SessionManager.getSessionValue(Constants.COURSES) !== null) {
-            courses = SessionManager.getSessionValue(Constants.COURSES).Courses;
+        if (SessionManager.getSessionValue(Constants.COURSES_BY_BATCH) !== null) {
+            var batchKey = SessionManager.getSessionValue(Constants.COURSES_BY_BATCH);
+            if (SessionManager.getSessionValue(batchKey) !== null) {
+                courses = SessionManager.getSessionValue(batchKey).Courses;
+            }
         }
         this.state = {
             dataSource: ds.cloneWithRows(JSON.parse(courses)),
-            batch:''
         };
+
     }
 
     onBackPress() {
@@ -34,19 +44,23 @@ export default class RegisterCourseContainer extends Component {
 
     render() {
         return (
-            <View>
-                <TextInputCustom
-                    ref={(ref) => this.batch = ref}
-                    placeholder={''}
-                    secureTextEntry={false}
-                    onChangeTextCallback={val => this.setState({'fullName' : val})}
-                    returnKeyType="next"
-                    textInputWidth={((width * 86) / 100)}
-                    // onEndEditingCallback = {() => this.password.textFocus()}
-                />
 
-                <RegisterCourseListView dataSource={this.state.dataSource}
-                                      topGap={((height * 8.8) / 100)}/>
+            <View style={ styles.registrationView}>
+                <View style={ styles.internalOne}>
+                    <RegisterCourseListView dataSource={this.state.dataSource}
+                                            onpress={this.onpress}
+                                            topGap={((height * 0) / 100)}/>
+
+                </View>
+                <View style={ styles.internalTwo}>
+                    <View style={ styles.middleContainerViewButtons}>
+                        <View style={ styles.middleContainerViewButtonsBtn}>
+                            <TouchableHighlight onPress={ () => this.buttonsHandler('back')}>
+                                <Text style={ styles.btnTextLabels}>{'Back'}</Text>
+                            </TouchableHighlight>
+                        </View>
+                    </View>
+                </View>
 
                 <WebServiceCallManager visible={false} nav={this.props.navigator} ref={(input) => {
                     this.webservicemanager = input;
@@ -57,16 +71,27 @@ export default class RegisterCourseContainer extends Component {
 
 
     onpress = (data) => {
-        this.fetchTeacherTimeTable(data)
+        this.fetchCST(data);
     }
 
+    buttonsHandler(type) {
+        switch (type) {
+            case 'back':
+                dismissKeyboard();
+                this.onBackPress();
+                break;
+            default:
+                alert(type + ' is pressed');
 
-    fetchTeacherTimeTable(data) {
+        }
+    }
+
+    fetchCST(data) {
         // alert(JSON.stringify(data.id));
         var params = {
             "id": JSON.stringify(data.id)
         }
-        this.webservicemanager.callWebService("faculty", "", params, (response) => {
+        this.webservicemanager.callWebService("courses", "", params, (response) => {
             this.handleWebServiceCallResponse(response, data);
         });
 
@@ -74,13 +99,51 @@ export default class RegisterCourseContainer extends Component {
 
     handleWebServiceCallResponse(data, rowData) {
 
-        if (data.TimeTable !== null && data.TimeTable.length > 0) {
-
-            SessionManager.setSessionValue(Constants.TEACHER_TIMETABLE, data);
-            Screens.TeacherTimeTableContainer.title = rowData.fullName;
-            this.props.navigator.push(Screens.TeacherTimeTableContainer);
+        if (data.CST !== null && data.CST.length > 0) {
+            SessionManager.setSessionValue(Constants.COURSE_SECTION_TEACHER, rowData.id);
+            SessionManager.setSessionValue(rowData.id, data);
+            this.props.navigator.push(Screens.CSTContainer);
         }
 
     }
 
+
 }
+
+const styles = StyleSheet.create({
+    registrationView: {
+        flex: 10,
+        height: ((height * ( (Platform.OS === 'ios') ? 85 : 100)) / 100), // if ios height = 85 else 82
+        paddingVertical: ((height * 1) / 100),
+        marginTop: ((height * 8) / 100)
+    },
+    internalOne: {
+        flex: 8,
+        height: ((height * 5) / 100),
+        // justifyContent: 'space-between',
+        // marginTop: ((height * 8) / 100),
+        //marginBottom: ((height * 36) / 100)
+        // alignItems: 'center'
+    },
+    internalTwo: {
+        flex: 1,
+    },
+    btnTextLabels: {
+        color: '#FFFFFF',
+        height: 35,
+        textAlign: 'center',
+        backgroundColor: '#4E5166',
+        paddingTop: 9
+    },
+    middleContainerViewButtons: {
+        justifyContent: 'center',
+        flexDirection: 'row',
+        marginTop: ((height * 2) / 100),
+        borderRadius: 4,
+    },
+    middleContainerViewButtonsBtn: {
+        width: ((width * 41) / 100),
+        backgroundColor: '#000000',
+        borderRadius: 4,
+    },
+});

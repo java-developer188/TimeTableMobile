@@ -46,7 +46,7 @@ export default class TeacherNamesContainer extends Component {
     }
 
 
-    onpress = (data) => {
+     onpress = (data) => {
         this.fetchTeacherTimeTable(data)
     }
 
@@ -67,7 +67,7 @@ export default class TeacherNamesContainer extends Component {
         if (data.TimeTable !== null && data.TimeTable.length > 0) {
 
             SessionManager.setSessionValue(Constants.TEACHER_TIMETABLE, data);
-            Screens.TeacherTimeTableContainer.title = rowData.fullName;
+            Screens.TeacherTimeTableContainer.title = rowData.name;
             this.props.navigator.push(Screens.TeacherTimeTableContainer);
         }
 

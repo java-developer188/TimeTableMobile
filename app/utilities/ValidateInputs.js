@@ -60,12 +60,7 @@ export class ValidateInputs{
     // check mobile  number is numeric
     var numeric  = userValue.match(/^\d+$/);
 
-    if (this.checkEmptyUserInput(userValue)) {
-      result =  false;
-      // alert(key + ' cannot be empty');
-      msg = key + ' cannot be empty';
-    }
-    else if (!numeric) {
+   if (!numeric) {
         // alert(key + ' should be in numeric');
         result = false;
         msg = key + ' should be in numeric';

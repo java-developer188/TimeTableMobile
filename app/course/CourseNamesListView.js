@@ -86,7 +86,7 @@ const styles = StyleSheet.create({
     },
     row:{
         flexDirection:'row',
-        height: ((height * 8) / 100),
+        //height: ((height * 8) / 100),
     },
     block:{
         width:((width * 3) / 100),
@@ -104,7 +104,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'black'
     },
     listviewcontainer: {
-        height: ((height * 100) / 100),
+        height: ((height * 85) / 100),
     },
     balanceText: {
         fontSize: ((width * 4) / 100),

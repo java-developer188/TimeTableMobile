@@ -48,9 +48,9 @@ export default class HomeScreen extends Component {
     }
 
     handleCoursesCallResponse(data) {
-
+        alert(JSON.stringify(data))
         if (data.Courses !== null && data.Courses.length > 0) {
-
+            alert(JSON.stringify(data))
             SessionManager.setSessionValue(Constants.COURSES, data);
 
             this.props.navigator.push(Screens.CourseNamesContainer);
@@ -61,26 +61,31 @@ export default class HomeScreen extends Component {
         //   clearTimeout(timer);
 
         if (item === Screens.TeacherNamesContainer) {
-
-
-            var params = {};
-            this.webservicemanager.callWebService("faculty", "", params, (response) => {
-                this.handleFacultyCallResponse(response);
-            });
+            this.facultyWebServiceCall();
 
         }
         else  if (item === Screens.CourseNamesContainer) {
-
-            var params = {};
-            this.webservicemanager.callWebService("courses", "", params, (response) => {
-                this.handleCoursesCallResponse(response);
-            });
+            this.coursesWebServiceCall();
 
         }
         else {
             this.props.navigator.push(item);
         }
 
+    }
+
+    coursesWebServiceCall() {
+        var params = {};
+        this.webservicemanager.callWebService("courses", "", params, (response) => {
+            this.handleCoursesCallResponse(response);
+        });
+    }
+
+    facultyWebServiceCall() {
+        var params = {};
+        this.webservicemanager.callWebService("faculty", "", params, (response) => {
+            this.handleFacultyCallResponse(response);
+        });
     }
 
 

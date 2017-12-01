@@ -41,7 +41,7 @@ export default class TeacherNamesListView extends Component {
             <View style={styles.row}>
                 <View style={[styles.block, {backgroundColor: color[rowID%5]}]}/>
                 <Text style={styles.header}>
-                    {rowData.fullName}
+                    {rowData.name}
                 </Text>
             </View>
         </TouchableHighlight>
@@ -79,7 +79,7 @@ const styles = StyleSheet.create({
        paddingTop: ((width * 2) / 100),
         paddingBottom: ((width * 2) / 100),
         //marginLeft: ((width * .5) / 100),
-        marginTop: ((height * 8) / 100),
+        marginTop: ((height * 8) / 100)
     },
     header: {
         fontSize: ((width * 5) / 100),
@@ -109,7 +109,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'black'
     },
     listviewcontainer: {
-        height: ((height * 100) / 100),
+        height: ((height * 85) / 100),
     },
     balanceText: {
         fontSize: ((width * 4) / 100),

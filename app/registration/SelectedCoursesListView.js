@@ -10,10 +10,9 @@ import {
 } from 'react-native'
 const {width, height} = Dimensions.get("window");
 var color = ['#FF8563','#716B99','#20B5A3','#FF6073','#CEE271'];
-// Showing the customer accounts data row
 var topGap;
 
-export default class TeacherTimeTableListView extends Component {
+export default class SelectedCoursesListView extends Component {
 
     constructor(props) {
         super(props);
@@ -22,7 +21,6 @@ export default class TeacherTimeTableListView extends Component {
             dataSource: this.props.dataSource,
             showHeader: this.props.showHeader,
             headerText: this.props.headerText,
-            onPress: this.props.onpress,
         }
 
     }
@@ -34,36 +32,32 @@ export default class TeacherTimeTableListView extends Component {
     }
 
 
-    renderRow = (rowData,rowID) => (
+    renderRow =  (rowData,rowID) => (
+            <View style={styles.row}>
+                <View style={[styles.blockOne, {backgroundColor: color[rowID%5]}]}>
+                    <Text style={styles.boldText}>
+                        {rowData.courseCode}
+                    </Text>
+                </View>
 
-        <View style={styles.row}>
-            <View style={[styles.blockOne, {backgroundColor: color[rowID%5]}]}>
-                <Text style={styles.boldText}>
-                    {rowData.day}
-                </Text>
-                <Text>
-                    {rowData.time}
-                </Text>
-            </View>
+                <View style={styles.blockTwo}>
+                    <Text style={styles.balanceText}>
+                        {rowData.fullname}
+                    </Text>
+                    <Text style={styles.text}>
+                        {rowData.teacher}
+                    </Text>
+                </View>
 
-            <View style={styles.blockTwo}>
-                <Text style={styles.text}>
-                    Room
-                </Text>
-                <Text style={styles.textBottom}>
-                    {rowData.room}
-                </Text>
+                <View style={styles.blockThree}>
+                    <Text style={styles.text}>
+                        Section:
+                    </Text>
+                    <Text style={styles.sectionText} >
+                        {rowData.section}
+                    </Text>
+                </View>
             </View>
-
-            <View style={styles.blockThree}>
-                <Text style={styles.boldText}>
-                    {rowData.course}
-                </Text>
-                <Text >
-                    Section: {rowData.section}
-                </Text>
-            </View>
-        </View>
     );
 
 
@@ -95,42 +89,64 @@ export default class TeacherTimeTableListView extends Component {
 
 const styles = StyleSheet.create({
     container: {
-        paddingTop: ((width * 2) / 100),
-        marginLeft: ((width * 0) / 100),
-        marginTop:((height *9) / 100),
+       paddingTop: ((width * 2) / 100),
+        paddingBottom: ((width * 2) / 100),
+        //marginLeft: ((width * .5) / 100),
+        marginTop: ((height * 8) / 100),
     },
-    row: {
+    header: {
+        fontSize: ((width * 5) / 100),
+        textAlign: 'left',
+        fontWeight: 'bold',
+        color: 'black',
+        marginTop: ((height * 3) / 100),
+        marginLeft: ((height * 2) / 100)
+    },
+    row:{
         flexDirection:'row',
+       // height: ((height * 10) / 100),
     },
     blockOne:{
         flex:2,
+        justifyContent:'center',
         alignItems:'center',
         backgroundColor: 'red',
     },
     blockTwo:{
-        flex:2,
-        alignItems:'center',
-        marginLeft: ((height * 2) / 100)
+        flex:4,
+        marginTop: ((height * 3) / 100),
+        marginLeft: ((height * 1.5) / 100)
     },
     blockThree:{
-        flex:4,
+        width:undefined,
+        flex:3,
+        justifyContent:'center',
         alignItems:'center',
     },
     boldText: {
-        fontSize: ((width * 3.5) / 100),
+        fontSize: ((width * 4.5) / 100),
         textAlign: 'left',
         color: 'black',
         fontWeight:'bold',
-        marginTop: ((height * 4) / 100),
+        marginTop: ((height * 3) / 100),
     },
     text: {
         fontSize: ((width * 3.5) / 100),
         textAlign: 'left',
         color: 'black',
-        marginTop: ((height * 4) / 100),
+        marginTop: ((height * 1) / 100),
+        paddingLeft: ((width * 5) / 100),
     },
-    textBottom: {
-        marginBottom: ((height * 2) / 100),
+    sectionText: {
+        marginTop: ((height * 1) / 100),
+        marginBottom: ((height * 1) / 100),
+        marginLeft: ((height * 0.5) / 100),
+        marginRight: ((height * 0.5) / 100),
+        fontWeight:'bold',
+        color: 'black',
+        fontSize: ((width * 4.5) / 100),
+        justifyContent:'center',
+        alignItems:'center',
     },
     separator: {
         flex: 1,

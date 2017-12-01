@@ -17,6 +17,7 @@ import {
     TouchableHighlight,
     Dimensions,
     Platform,
+    AsyncStorage,
     AppState
 } from 'react-native';
 import {Screens} from '.././navigation/Screens'
@@ -34,6 +35,8 @@ const {width, height} = Dimensions.get("window");
 
 const loginBackgroundViewImg = require('.././assets/login_box.png');
 
+import {NotificationsAndroid} from 'react-native-notifications';
+
 
 /* Login View for displaying TextInputs(username, passwords),
  Buttons (Login, Register) and Labels (Terms & condition , forget password)
@@ -42,6 +45,20 @@ const loginBackgroundViewImg = require('.././assets/login_box.png');
 export class LoginContainer extends Component {
     constructor(props) {
         super(props);
+        // On Android, we allow for only one (global) listener per each event type.
+        NotificationsAndroid.setRegistrationTokenUpdateListener((deviceToken) => {
+            alert('Push-notifications registered!'+ deviceToken)
+            this.processGcmToken(deviceToken)
+        });
+        // On Android, we allow for only one (global) listener per each event type.
+        // NotificationsAndroid.setNotificationReceivedListener((notification) => {
+        //     alert("Notification received on device", notification.getData())
+        //     //console.log("Notification received on device", notification.getData());
+        // });
+        // NotificationsAndroid.setNotificationOpenedListener((notification) => {
+        //     alert("Notification opened by device user", notification.getData())
+        //     //console.log("Notification opened by device user", notification.getData());
+        // });
         this.state = {
             username: '',
             password: '',
@@ -53,7 +70,28 @@ export class LoginContainer extends Component {
         }
     }
 
+    async processGcmToken (token){
+        try {
+            var value = await AsyncStorage.getItem(Constants.ASSIGNED_USER_ID);
+            if (value !== null && value.length > 0){
+               this.sendGCMTokenToServer(value,token)
+            } else {
+                SessionManager.setSessionValue(Constants.GCM_TOKEN,token)
+            }
+        } catch (error) {
+            alert('Error encountered while Device token ' + error.message);
+        }
+    }
 
+    sendGCMTokenToServer(studentId,token){
+        var params = {
+            "id": studentId,
+            "token":token
+        };
+        this.webservicemanager.callWebService("student/gcm", "", params, (response) => {
+            alert("Token send successfully");
+        });
+    }
     buttonsHandler(type) {
         switch (type) {
             // case 'forgotpassword':
@@ -62,9 +100,9 @@ export class LoginContainer extends Component {
             // case 'forgotuserid':
             //    this.props.navigation.push(Screens.ForgotUserIDScreen);
             //     break;
-            // case 'unlockprofile':
-            //     this.props.navigation.push(Screens.UnlockProfileScreen);
-            //     break;
+            case 'faculty':
+                this.facultyWebServiceCall();
+                break;
             case 'register':
                 dismissKeyboard();
                 this.props.navigation.push(Screens.RegistrationScreen);
@@ -72,7 +110,6 @@ export class LoginContainer extends Component {
             case 'login':
                 this.loginWebServiceCall();
                 dismissKeyboard();
-                //this.props.navigation.push(Screens.HomeScreen);
                 break;
             default:
                 alert(type + ' is pressed');
@@ -204,10 +241,10 @@ export class LoginContainer extends Component {
                         this.buttonsHandler('forgotuserid')
                     }} underlayColor={'transparent'}>
                         <Text style={ styles.labels}>
-                            Forogot User ID
+                            Forgot User ID
                         </Text>
                     </TouchableHighlight>
-                    <TouchableHighlight onPress={() => this.buttonsHandler('terms')} underlayColor={'transparent'}>
+                    <TouchableHighlight onPress={() => this.buttonsHandler('faculty')} underlayColor={'transparent'}>
                         <View >
                             <Text style={ styles.labels}>
                                 {'Faculty'}
@@ -223,6 +260,20 @@ export class LoginContainer extends Component {
         );
     }
 
+    facultyWebServiceCall() {
+        var params = {};
+        this.webservicemanager.callWebService("faculty", "", params, (response) => {
+            this.handleFacultyCallResponse(response);
+        });
+    }
+
+    handleFacultyCallResponse(data) {
+
+        if (data.Teachers !== null && data.Teachers.length > 0) {
+            SessionManager.setSessionValue(Constants.FACULTY_MEMBERS, data);
+            this.props.navigation.push(Screens.TeacherNamesContainer);
+        }
+    }
 
 } // end of class
 

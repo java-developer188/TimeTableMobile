@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "658018828949",
+    "project_id": "firebase-smarttimetable"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:658018828949:android:f0c9fda390e4b016",
+        "android_client_info": {
+          "package_name": "com.smarttimetable"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "658018828949-jbn1tqtv250t0gukjj308p0ej1s904qe.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDZy-hIyfCftCESTKFe02E011T5RTdvNMQ"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

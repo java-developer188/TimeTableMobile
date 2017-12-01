@@ -6,6 +6,7 @@ import {
     Text,
     ToolbarAndroid,
     NativeModules, Easing,
+    AsyncStorage,
     View, TouchableOpacity, Alert, Dimensions, Navigator, ListView, ScrollView
 } from 'react-native';
 
@@ -27,11 +28,44 @@ export default class WelcomeScreen extends Component {
         // const dataSource = new ViewPager.DataSource({pageHasChanged: (p1, p2) => p1 !== p2});
         //  ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
         super(props);
-        this.state = {
-            // dataSource : dataSource.cloneWithPages(IMGS),
-            // ds : ds.cloneWithRows(accounts)
-        }
 
+    }
+
+    componentDidMount(){
+        var gcmToken;
+        if (SessionManager.getSessionValue(Constants.GCM_TOKEN) !== null  &&
+            SessionManager.getSessionValue(Constants.GCM_TOKEN).length > 0) {
+            if (SessionManager.getSessionValue(Constants.USER) !== null){
+                var student = JSON.parse(SessionManager.getSessionValue(Constants.USER));
+                gcmToken = SessionManager.getSessionValue(Constants.GCM_TOKEN);
+                //alert('S_id:'+student.id+" &&& token:"+gcmToken);
+                this.saveUserId(student.id);
+                //send token with user id to server
+                this.sendGCMTokenToServer(student.id,gcmToken)
+                SessionManager.setSessionValue(Constants.GCM_TOKEN,"");//clearing token so next time we send it from login screen
+
+            }
+        }
+    }
+
+
+    async  saveUserId(userId){
+        try {
+            await AsyncStorage.setItem(Constants.ASSIGNED_USER_ID,JSON.stringify(userId));
+            //alert('user id saved successfull');
+        } catch (error) {
+            alert('Error encountered while saving user id :' + error.message);
+        }
+    };
+
+    sendGCMTokenToServer(studentId,token){
+        var params = {
+            "id": JSON.stringify(studentId),
+            "token":token
+        };
+        this.webservicemanager.callWebService("student/gcm", "", params, (response) => {
+            alert("Token send successfully");
+        });
     }
 
     handleFacultyMemberCallResponse(data) {
@@ -83,7 +117,7 @@ export default class WelcomeScreen extends Component {
             var params = {
                 "id": JSON.parse(student).id
             };
-            this.webservicemanager.callWebService("student", "", params, (response) => {
+            this.webservicemanager.callWebService("student/id", "", params, (response) => {
                 this.handleStudentTimetableCallResponse(response);
             });
         }

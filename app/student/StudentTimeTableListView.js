@@ -144,7 +144,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'black'
     },
     listviewcontainer: {
-        height: ((height * 100) / 100),
+        height: ((height * 85) / 100),
     },
     balanceText: {
         fontSize: ((width * 4) / 100),

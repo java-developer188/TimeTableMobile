@@ -20,7 +20,6 @@ const imgMenuButton = require('.././assets/menu.png');
 const {width, height} = Dimensions.get('window');
 
 
-
 /*
  NavigationManager manages the overall navigation of the app.
  Also the Navigation bar Left and Right buttons along with Title.
@@ -30,6 +29,8 @@ export class NavigationManager extends Component {
     constructor(props) {
         super(props);
     }
+
+
 
     renderScene(route, navigator) {
 
@@ -73,6 +74,18 @@ export class NavigationManager extends Component {
         </View>
     );
 
+    // Home Text Button
+    settings = (
+        <View style={styles.rightButton}>
+            <TouchableOpacity onPress={() => {
+                SessionManager.clearSession();
+                this.nav.push(Screens.SettingsContainer)
+            }}>
+                <Text style={styles.rightButtonTitle}>{'Settings'}</Text>
+            </TouchableOpacity>
+        </View>
+    );
+
     //Backbutton
     backbutton = (
         <View style={styles.rightButton}>
@@ -100,7 +113,7 @@ export class NavigationManager extends Component {
         LeftButton: (route, navigator, index, navState) => {
 
 
-            if (route === Screens.HomeScreen) {
+            if (route === Screens.LoginScreen) {
                 return null;
             }
             else {
@@ -111,8 +124,8 @@ export class NavigationManager extends Component {
         },
         RightButton: (route, navigator, index, navState) => {
 
-            if (route === Screens.HomeScreen) {
-                return null;
+            if (route === Screens.LoginScreen) {
+                return this.settings;
             }
             // else if (route === Screens.HomeScreen) {
             //     return this.logout;

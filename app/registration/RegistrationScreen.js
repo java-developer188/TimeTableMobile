@@ -62,52 +62,40 @@ export default class RegistrationScreen extends Component {
 
     buttonsHandler(type) {
         switch (type) {
-            // case 'forgotpassword':
-            //     this.props.navigation.push(Screens.ForgotPasswordScreen);
-            //     break;
-            // case 'forgotuserid':
-            //    this.props.navigation.push(Screens.ForgotUserIDScreen);
-            //     break;
-            // case 'unlockprofile':
-            //     this.props.navigation.push(Screens.UnlockProfileScreen);
-            //     break;
-            case 'register':
-                this.registrationWebServiceCall();
+            case 'select_courses':
                 dismissKeyboard();
+                this.proceedToNext();
                 break;
-            // case 'select_courses':
-            //     this.props.navigation.push(Screens.RegistrationWelcomeScreen);
-            //     this.registrationWebServiceCall(data);
-            //     dismissKeyboard();
-            //     //this.props.navigation.push(Screens.HomeScreen);
-            //     break;
             default:
                 alert(type + ' is pressed');
 
         }
     }
 
+    proceedToNext() {
 
-    // this will be called when user hit login button
-
-    registrationWebServiceCall() {
-
-        if (this.state.fullName.length === 0 && this.state.email.length === 0 && this.state.rollNumber.length === 0) {
-            this.setState({emptyInputFields: 'Full Name, Email and Roll Number must not be empty'});
-            this.fullName.textFocus();
-        }
-        else if (this.state.fullName.length === 0) {
+        // if (this.state.fullName.length === 0 && this.state.email.length === 0 && this.state.rollNumber.length === 0) {
+        //     this.setState({emptyInputFields: 'Full Name, Email, Roll Number and Username must not be empty'});
+        //     this.fullName.textFocus();
+        // }
+        // else
+        if (this.state.fullName.length === 0) {
             this.setState({emptyInputFields: 'Full Name Empty'});
             this.fullName.textFocus();
+        }
+        else if (this.state.rollNumber.length === 0) {
+            this.setState({emptyInputFields: 'Roll Number Empty'});
+            this.rollNumber.textFocus();
+        }
+        else if (this.state.userName.length === 0) {
+            this.setState({emptyInputFields: 'Username Empty'});
+            this.rollNumber.textFocus();
         }
         else if (this.state.email.length === 0) {
             this.setState({emptyInputFields: 'Email Empty'});
             this.email.textFocus();
         }
-        else if (this.state.rollNumber.length === 0) {
-            this.setState({emptyInputFields: 'Roll Number Empty'});
-            this.rollNumber.textFocus();
-        }else {
+        else {
             this.setState({emptyInputFields: ''});
 
             var student = {
@@ -121,65 +109,10 @@ export default class RegistrationScreen extends Component {
                 courses:[]
             }
 
-            this.webservicemanager.callWebService("student/register", "", student, (response) => {
-                this.handleWebServiceCallResponse(response);
-            });
+            SessionManager.setSessionValue(Constants.REGISTRATION_DATA, student);
+            this.props.navigator.push(Screens.CoursesByBatchScreen);
         }
     }
-
-    /* handle the web service successfull response error
-     response will be handled inside WebServiceCallManager */
-
-    handleWebServiceCallResponse(data) {
-        // if(data.Header.RequestAction === "LOCK_USER"){
-        //      alert('user locked');
-        //      return;
-        // }
-        dismissKeyboard();
-
-        var userData = {
-            "username": this.state.username,
-            "password": this.state.password
-        }
-
-
-        // var passwordPolicy = {
-        //   "passwordPolicy" : data.Body.Transaction.PasswordPolicy,
-        //   "passwordPolicyRegex" : data.Body.Transaction.PasswordPolicyRegex
-        // }
-        SessionManager.setSessionValue(Constants.USER, data.Student);
-
-        this.props.navigation.push(Screens.WelcomeScreen);
-
-
-        this.setState({
-            batch:'',
-            rollNumber:'',
-            fullName:'',
-            userName:'',
-            section:'',
-            mobileNumber:'',
-            email:'',
-            emptyInputFields: '',
-            isTryAgain: false,
-        });
-
-        this.fullName.textClear();
-        this.section.textClear();
-        this.userName.textClear();
-        this.email.textClear();
-        this.mobileNumber.textClear();
-        this.batch.textClear();
-        this.rollNumber.textClear();
-        dismissKeyboard();
-
-    }
-
-    // handling text input field focus
-    textHandler() {
-        this.password.focus();
-    }
-
 
     render() {
         return (
@@ -225,6 +158,7 @@ export default class RegistrationScreen extends Component {
                             onChangeTextCallback={val => this.setState({'batch' :  val})}
                             returnKeyType="next"
                             textInputWidth={((width * 86) / 100)}
+                            keyboardType="numeric"
                             // onEndEditingCallback = {() => this.password.textFocus()}
                         />
                         <TextInputCustom
@@ -243,6 +177,7 @@ export default class RegistrationScreen extends Component {
                             onChangeTextCallback={val => this.setState({'email' :  val})}
                             returnKeyType="next"
                             textInputWidth={((width * 86) / 100)}
+                            keyboardType="email-address"
                             // onEndEditingCallback = {() => this.password.textFocus()}
                         />
                         <TextInputCustom
@@ -252,6 +187,7 @@ export default class RegistrationScreen extends Component {
                             onChangeTextCallback={val => this.setState({'mobileNumber' :  val})}
                             returnKeyType="done"
                             textInputWidth={((width * 86) / 100)}
+                            keyboardType="phone-pad"
                         />
                         <Text style={ styles.emptyInputFields}>{this.state.emptyInputFields}</Text>
                     </View>
@@ -262,14 +198,6 @@ export default class RegistrationScreen extends Component {
                             </TouchableHighlight>
                         </View>
                     </View>
-                    <View style={ styles.middleContainerViewButtons}>
-                        <View style={ styles.middleContainerViewButtonsBtn}>
-                            <TouchableHighlight onPress={ () => this.buttonsHandler('register')}>
-                                <Text style={ styles.btnTextLabels}>{'Submit'}</Text>
-                            </TouchableHighlight>
-                        </View>
-                    </View>
-
                 </Image>
                 <WebServiceCallManager visible={false} nav={this.props.navigation} ref={ (input) => {
                     this.webservicemanager = input;
