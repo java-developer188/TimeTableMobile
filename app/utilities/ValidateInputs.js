@@ -6,7 +6,23 @@ export class ValidateInputs{
     return (userValue==0 ? true : false);
   }
 
-  // Validating Account Number by checking empty input , numeric value and user value count digits
+    static validateSection(userValue){
+        var re = /^(([A-Z]{2}|[a-z]{2}|[A-Z][a-z]|[a-z][A-Z])[0-9])|(([A-Z]|[a-z])(?![A-Z]|[a-z]))$/
+        return re.test(userValue);
+    }
+
+    static validateBatch(userValue){
+        var re = /^\d+$/
+        return re.test(userValue);
+    }
+
+    static validateEmail(userValue){
+        var re = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/
+        return re.test(userValue);
+    }
+
+
+    // Validating Account Number by checking empty input , numeric value and user value count digits
   static checkAccountNumber(key, userValue){
 
     var result  = true;

@@ -143,8 +143,16 @@ export class LoginContainer extends Component {
 
             this.webservicemanager.callWebService("login", "", params, (response) => {
                 this.handleWebServiceCallResponse(response);
-            });
+            },
+                (response) => {
+                    this.handleErrorResponse(response);
+                },);
         }
+    }
+
+
+    handleErrorResponse(data) {
+        alert(data.errorDescription);
     }
 
     /* handle the web service successfull response error
@@ -230,18 +238,18 @@ export class LoginContainer extends Component {
                             </TouchableHighlight>
                         </View>
                     </View>
+                    {/*<TouchableHighlight onPress={() => {*/}
+                        {/*this.buttonsHandler('forgotpassword')*/}
+                    {/*}} underlayColor={'transparent'}>*/}
+                        {/*<Text style={ styles.labels}>*/}
+                            {/*Forgot Password*/}
+                        {/*</Text>*/}
+                    {/*</TouchableHighlight>*/}
                     <TouchableHighlight onPress={() => {
-                        this.buttonsHandler('forgotpassword')
+                        this.buttonsHandler('about')
                     }} underlayColor={'transparent'}>
                         <Text style={ styles.labels}>
-                            Forgot Password
-                        </Text>
-                    </TouchableHighlight>
-                    <TouchableHighlight onPress={() => {
-                        this.buttonsHandler('forgotuserid')
-                    }} underlayColor={'transparent'}>
-                        <Text style={ styles.labels}>
-                            Forgot User ID
+                            About
                         </Text>
                     </TouchableHighlight>
                     <TouchableHighlight onPress={() => this.buttonsHandler('faculty')} underlayColor={'transparent'}>

@@ -66,7 +66,6 @@ export class NavigationManager extends Component {
     homescreen = (
         <View style={styles.rightButton}>
             <TouchableOpacity onPress={() => {
-                SessionManager.clearSession();
                 this.nav.popToRoute(Screens.HomeScreen)
             }}>
                 <Text style={styles.rightButtonTitle}>{'Home'}</Text>
@@ -78,7 +77,6 @@ export class NavigationManager extends Component {
     settings = (
         <View style={styles.rightButton}>
             <TouchableOpacity onPress={() => {
-                SessionManager.clearSession();
                 this.nav.push(Screens.SettingsContainer)
             }}>
                 <Text style={styles.rightButtonTitle}>{'Settings'}</Text>
@@ -113,8 +111,8 @@ export class NavigationManager extends Component {
         LeftButton: (route, navigator, index, navState) => {
 
 
-            if (route === Screens.LoginScreen) {
-                return null;
+            if (route === Screens.LoginScreen || route === Screens.WelcomeScreen ) {
+                return this.settings;
             }
             else {
                 return this.backbutton;
@@ -124,12 +122,13 @@ export class NavigationManager extends Component {
         },
         RightButton: (route, navigator, index, navState) => {
 
-            if (route === Screens.LoginScreen) {
-                return this.settings;
+            if (route === Screens.LoginScreen || route === Screens.SettingsContainer ||
+                route === Screens.RegistrationScreen) {
+                return null;
             }
-            // else if (route === Screens.HomeScreen) {
-            //     return this.logout;
-            // }
+            else if (route === Screens.WelcomeScreen) {
+                return this.logout;
+            }
             else {
                 return this.homescreen;
             }

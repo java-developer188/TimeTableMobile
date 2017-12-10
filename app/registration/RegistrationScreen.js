@@ -27,6 +27,7 @@ import {NavigationManager} from '.././navigation/NavigationManager';
 import ButtonCustom from '.././components/ButtonCustom';
 import Constants from '.././utilities/Constants'
 import {SessionManager} from "../utilities/SessionManager";
+import {ValidateInputs} from "../utilities/ValidateInputs";
 
 const dismissKeyboard = require('dismissKeyboard');
 const {width, height} = Dimensions.get("window");
@@ -83,9 +84,17 @@ export default class RegistrationScreen extends Component {
             this.setState({emptyInputFields: 'Full Name Empty'});
             this.fullName.textFocus();
         }
+        else if (this.state.section.length > 0 && !ValidateInputs.validateSection(this.state.section)) {
+            this.setState({emptyInputFields: 'Section invalid (format A,GR1,GR2)'});
+            this.section.textFocus();
+        }
         else if (this.state.rollNumber.length === 0) {
             this.setState({emptyInputFields: 'Roll Number Empty'});
             this.rollNumber.textFocus();
+        }
+        else if (this.state.batch.length > 0 && !ValidateInputs.validateBatch(this.state.batch)) {
+            this.setState({emptyInputFields: 'Invalid batch value'});
+            this.batch.textFocus();
         }
         else if (this.state.userName.length === 0) {
             this.setState({emptyInputFields: 'Username Empty'});
@@ -93,6 +102,10 @@ export default class RegistrationScreen extends Component {
         }
         else if (this.state.email.length === 0) {
             this.setState({emptyInputFields: 'Email Empty'});
+            this.email.textFocus();
+        }
+        else if (this.state.email.length > 0 && !ValidateInputs.validateEmail(this.state.email)) {
+            this.setState({emptyInputFields: 'Email invalid'});
             this.email.textFocus();
         }
         else {

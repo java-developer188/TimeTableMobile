@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {
     ListView,
-    View, Dimensions, Alert, Modal, Text, TouchableHighlight, StyleSheet, Platform, AsyncStorage
+    View, Dimensions, Alert, Modal, Text, TouchableHighlight, StyleSheet, Platform, AsyncStorage,ToastAndroid
 } from 'react-native'
 import {SessionManager} from '.././utilities/SessionManager';
 import {Screens} from '.././navigation/Screens';
@@ -26,6 +26,7 @@ export default class SettingsContainer extends Component {
             serverIpModal: false,
             changePasswordModal: false,
             serverIp: '',
+            username:'',
             newPassword: '',
             confirmPassword: '',
             isError: false,
@@ -67,7 +68,6 @@ export default class SettingsContainer extends Component {
 
 
     showServerIpModal() {
-        alert(JSON.stringify(this.getServerIP()))
         return (
             <View style={styles.modal}>
                 <Modal
@@ -89,7 +89,7 @@ export default class SettingsContainer extends Component {
                                 ref={(ref) => this.serverIP = ref}
                                 placeholder={'IP Address'}
                                 secureTextEntry={false}
-                                value = {this.state.serverIp}
+                                value={this.state.serverIp}
                                 onChangeTextCallback={val => this.setState({'serverIp': val})}
                                 returnKeyType="next"
                                 textInputWidth={((width * 86) / 100)}
@@ -116,7 +116,6 @@ export default class SettingsContainer extends Component {
     }
 
     showChangePasswordModal() {
-        //this.setError(false,'');
         return (
             <View style={styles.modal}>
                 <Modal
@@ -134,9 +133,19 @@ export default class SettingsContainer extends Component {
                     <View style={styles.modalLayout}>
                         <View>
                             <TextInputCustom
+                                ref={(ref) => this.username = ref}
+                                placeholder={'Username'}
+                                secureTextEntry={false}
+                                onChangeTextCallback={val => this.setState({'username': val})}
+                                returnKeyType="next"
+                                textInputWidth={((width * 86) / 100)}
+                                // onEndEditingCallback = {() => this.password.textFocus()}
+                            />
+
+                            <TextInputCustom
                                 ref={(ref) => this.newPassword = ref}
                                 placeholder={'New Password'}
-                                secureTextEntry={false}
+                                secureTextEntry={true}
                                 onChangeTextCallback={val => this.setState({'newPassword': val})}
                                 returnKeyType="next"
                                 textInputWidth={((width * 86) / 100)}
@@ -145,7 +154,7 @@ export default class SettingsContainer extends Component {
                             <TextInputCustom
                                 ref={(ref) => this.confirmPassword = ref}
                                 placeholder={'Confirm Password'}
-                                secureTextEntry={false}
+                                secureTextEntry={true}
                                 onChangeTextCallback={val => this.setState({'confirmPassword': val})}
                                 returnKeyType="next"
                                 textInputWidth={((width * 86) / 100)}
@@ -164,6 +173,9 @@ export default class SettingsContainer extends Component {
                             </View>
 
                         </View>
+                        <WebServiceCallManager visible={false} nav={this.props.navigation} ref={ (input) => {
+                            this.webservicemanager = input;
+                        }}/>
                     </View>
                 </Modal>
             </View>
@@ -188,26 +200,23 @@ export default class SettingsContainer extends Component {
 
     async  saveServerIP(ipAddress) {
         try {
-            if(ipAddress.length > 0 ) {
-                await AsyncStorage.setItem(Constants.SERVER_IP_ADDRESS, ipAddress);
-            }
-            //alert('user id saved successfull');
+            await AsyncStorage.setItem(Constants.SERVER_IP_ADDRESS, ipAddress);
         } catch (error) {
             alert('Error encountered while saving server IP address :' + error.message);
         }
     };
 
-    async getServerIP (){
+    async getServerIP() {
         try {
             var value = await AsyncStorage.getItem(Constants.SERVER_IP_ADDRESS);
-            if (value !== null && value.length > 0){
-               this.setState({serverIp:value});
+            if (value !== null && value.length > 0) {
+                this.setState({serverIp: value});
             } else {
-                this.setState({serverIp:''});
+                this.setState({serverIp: ''});
             }
         } catch (error) {
             alert('Error encountered while reading App storage ' + error.message);
-            this.setState({serverIp:''});
+            this.setState({serverIp: ''});
         }
     }
 
@@ -221,12 +230,18 @@ export default class SettingsContainer extends Component {
             case 'change_password':
                 dismissKeyboard();
                 if (this.validatePassword()) {
-                    this.setState({changePasswordModal: false});
+                    var params = {
+                        "username": this.state.username,
+                        "newPassword": this.state.newPassword,
+                        "confirmPassword":this.state.confirmPassword
+                    };
+                    this.webservicemanager.callWebService("student/chpwd", "", params, (response) => {
+                            this.handleWebServiceCallResponse(response);
+                        },
+                        (response) => {
+                            this.handleErrorResponse(response);
+                        },);
                 }
-                else {
-
-                }
-                //this.setState({changePasswordModal: false});
                 break;
             default:
                 alert(type + ' is pressed');
@@ -239,16 +254,20 @@ export default class SettingsContainer extends Component {
     }
 
     validatePassword() {
-        if (this.state.newPassword === '' || this.state.confirmPassword === '') {
+        if (this.state.username === ''  || this.state.newPassword === '' || this.state.confirmPassword === '') {
             this.setError(true, 'Fields cannot be empty');
             return false;
         }
+        else if (this.state.username.length < 6 || this.state.username.length > 20) {
+            this.setError(true, 'Username must have 6 - 20 characters');
+            return false;
+        }
         else if (this.state.newPassword.length < 8) {
-            this.setError(true, 'Password at least 8 characters long');
+            this.setError(true, 'Password cannot be less than 8 characters');
             return false;
         }
         else if (this.state.newPassword !== this.state.confirmPassword) {
-            this.setError(true, 'Two passwords does not match.');
+            this.setError(true, 'Two passwords do not match.');
             return false;
         }
         else {
@@ -256,16 +275,13 @@ export default class SettingsContainer extends Component {
             return true;
         }
     }
+    handleErrorResponse(data) {
+        this.setError(true, data.errorDescription);
+    }
 
-    handleWebServiceCallResponse(data, rowData) {
-
-        // if (data.TimeTable !== null && data.TimeTable.length > 0) {
-        //
-        //     SessionManager.setSessionValue(Constants.TEACHER_TIMETABLE, data);
-        //     Screens.TeacherTimeTableContainer.title = rowData.fullName;
-        //     this.props.navigator.push(Screens.TeacherTimeTableContainer);
-        // }
-
+    handleWebServiceCallResponse(response) {
+        this.setState({changePasswordModal: false});
+        ToastAndroid.showWithGravity('Password Changed' , ToastAndroid.SHORT, ToastAndroid.CENTER);
     }
 
 }

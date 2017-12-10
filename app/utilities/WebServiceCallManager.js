@@ -4,7 +4,7 @@ import Spinner from 'react-native-loading-spinner-overlay';
 import Config from './Config'
 import {SessionManager} from './SessionManager';
 import Constants from './Constants'
-import {Alert} from 'react-native';
+import {Alert,AsyncStorage} from 'react-native';
 import {Screens} from '.././navigation/Screens'
 
 
@@ -21,14 +21,34 @@ export class WebServiceCallManager extends Component {
         this.state = {
             visible: this.props.visible,
             size: 100,
+            serverIp:''
+        }
+        this.getServerIP();
+    }
+
+    async getServerIP (){
+        try {
+            var value = await AsyncStorage.getItem(Constants.SERVER_IP_ADDRESS);
+            if (value !== null && value.length > 0){
+                this.setState({serverIp:value});
+            } else {
+                this.setState({serverIp:''});
+            }
+        } catch (error) {
+            alert('Error encountered while reading App storage ' + error.message);
+            this.setState({serverIp:''});
         }
     }
 
     callWebService(requestAction, subAction, bodyParams, responseHandler, optionalErrHandler) {
         this.setState({visible: true});//Starting the Processing indicator
-
-
-        var url = Config.IP + requestAction;
+        var url ;
+        if(this.state.serverIp.length >0){
+            url = this.state.serverIp+requestAction;
+        }
+        else {
+            url = Config.IP + requestAction;
+        }
 
         if (url.startsWith('https')) {
             this._httpsCalling(url, bodyParams, responseHandler, optionalErrHandler);
