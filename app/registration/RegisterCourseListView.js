@@ -40,7 +40,7 @@ export default class RegisterCourseListView extends Component {
             <TouchableHighlight underlayColor='gainsboro' onPress={() => {
                 this.state.onPress(rowData);
             }}>
-                <View style={[styles.row, rowData.fullName.length > (width-20)  ? {height: ((height * 16) / 100)} : {height: ((height * 8) / 100)}]}>
+                <View style={[styles.row]}>
                     <View style={[styles.block, {backgroundColor: color[rowID%5]}]}/>
                     <Text style={styles.header}>
                         {rowData.fullName}
@@ -97,8 +97,10 @@ const styles = StyleSheet.create({
         textAlign: 'left',
         fontWeight: 'bold',
         color: 'black',
-        marginTop: ((height * 2) / 100),
+        marginTop: ((height * 3) / 100),
         marginLeft: ((height * 2) / 100),
+        marginRight: ((height * 2) / 100),
+        marginBottom: ((height * 0.5) / 100),
     },
     row: {
         flexDirection: 'row',

@@ -98,7 +98,10 @@ export default class RegistrationScreen extends Component {
         }
         else if (this.state.userName.length === 0) {
             this.setState({emptyInputFields: 'Username Empty'});
-            this.rollNumber.textFocus();
+            this.userName.textFocus();
+        } else if (!ValidateInputs.validateUsername(this.state.userName)) {
+            this.setState({emptyInputFields: 'Username must be between 6-20 characters'});
+            this.userName.textFocus();
         }
         else if (this.state.email.length === 0) {
             this.setState({emptyInputFields: 'Email Empty'});
@@ -107,6 +110,10 @@ export default class RegistrationScreen extends Component {
         else if (this.state.email.length > 0 && !ValidateInputs.validateEmail(this.state.email)) {
             this.setState({emptyInputFields: 'Email invalid'});
             this.email.textFocus();
+        }
+        else if (this.state.mobileNumber.length > 0 && !ValidateInputs.validateMobileNumber(this.state.mobileNumber)) {
+            this.setState({emptyInputFields: 'Mobile number must be of 11 digits'});
+            this.mobileNumber.textFocus();
         }
         else {
             this.setState({emptyInputFields: ''});

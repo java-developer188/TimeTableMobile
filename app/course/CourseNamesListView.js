@@ -82,7 +82,9 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         color: 'black',
         marginTop: ((height * 3) / 100),
-        marginLeft: ((height * 2) / 100)
+        marginLeft: ((height * 2) / 100),
+        marginRight: ((height * 2) / 100),
+        marginBottom: ((height * 0.5) / 100),
     },
     row:{
         flexDirection:'row',

@@ -12,15 +12,24 @@ export class ValidateInputs{
     }
 
     static validateBatch(userValue){
-        var re = /^\d+$/
+        var re = /^\d{4}$/
+        return re.test(userValue);
+    }
+
+    static validateUsername(userValue){
+        var re = /^[\w]{6,20}$/
         return re.test(userValue);
     }
 
     static validateEmail(userValue){
-        var re = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/
+        var re = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/
         return re.test(userValue);
     }
 
+    static validateMobileNumber(userValue){
+        var re = /^\d{11}$/
+        return re.test(userValue);
+    }
 
     // Validating Account Number by checking empty input , numeric value and user value count digits
   static checkAccountNumber(key, userValue){

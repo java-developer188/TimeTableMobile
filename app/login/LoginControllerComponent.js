@@ -47,7 +47,7 @@ export class LoginContainer extends Component {
         super(props);
         // On Android, we allow for only one (global) listener per each event type.
         NotificationsAndroid.setRegistrationTokenUpdateListener((deviceToken) => {
-            alert('Push-notifications registered!'+ deviceToken)
+            //alert('Push-notifications registered!'+ deviceToken)
             this.processGcmToken(deviceToken)
         });
         // On Android, we allow for only one (global) listener per each event type.
@@ -110,6 +110,9 @@ export class LoginContainer extends Component {
             case 'login':
                 this.loginWebServiceCall();
                 dismissKeyboard();
+                break;
+            case 'about':
+                Alert.alert('About','Smart Timetable Notifier version 1.0');
                 break;
             default:
                 alert(type + ' is pressed');
