@@ -6,14 +6,15 @@ import {
     StyleSheet,
     Alert,
     TouchableHighlight,
-    Dimensions
+    Dimensions,
+    Image
 } from 'react-native'
 const {width, height} = Dimensions.get("window");
-var color = ['#FF8563','#716B99','#20B5A3','#FF6073','#CEE271'];
-// Showing the customer accounts data row
+var color = ['#FF8563', '#716B99', '#20B5A3', '#FF6073', '#CEE271'];
+const selectIcon = require('.././assets/tick.png');
 var topGap;
 
-export default class TeacherNamesListView extends Component {
+export default class AddCourseListView extends Component {
 
     constructor(props) {
         super(props);
@@ -34,18 +35,19 @@ export default class TeacherNamesListView extends Component {
     }
 
 
-    renderRow =  (rowData,rowID) => (
-        <TouchableHighlight underlayColor='gainsboro' onPress={() => {
-            this.state.onPress(rowData)
-        }}>
-            <View style={styles.row}>
-                <View style={[styles.block, {backgroundColor: color[rowID%5]}]}/>
-                <Text style={styles.header}>
-                    {rowData.name}
-                </Text>
-            </View>
-        </TouchableHighlight>
-    );
+    renderRow = (rowData, rowID) => {
+        return (
+            <TouchableHighlight underlayColor='gainsboro' onPress={() => {
+                this.state.onPress(rowData);
+            }}>
+                <View style={[styles.row]}>
+                    <View style={[styles.block, {backgroundColor: color[rowID%5]}]}/>
+                    <Text style={styles.header}>
+                        {rowData.fullName}
+                    </Text>
+                </View>
+        </TouchableHighlight>)
+    };
 
 
     renderHeader = (headerText) => {
@@ -58,13 +60,22 @@ export default class TeacherNamesListView extends Component {
         );
     }
 
+    _renderPage(data, width, height) {
+        return (
+            <View>
+                <Image source={data} resizeMode='cover'
+                       style={{width: width, height: height, backgroundColor: 'transparent'}}/>
+            </View>
+        );
+    }
+
     render() {
         return (
             <View style={styles.container}>
                 <ListView
                     style={styles.listviewcontainer}
                     dataSource={this.state.dataSource}
-                    renderRow={(row,sectionID, rowID, highlightRow) => this.renderRow(row,rowID)}
+                    renderRow={(row, sectionID, rowID, highlightRow) => this.renderRow(row, rowID)}
                     renderHeader={this.state.showHeader ? () => this.renderHeader(this.state.headerText) : () => {
                     }}
                     renderSeparator={(sectionId, rowId) => <View key={rowId} style={styles.separator}/>}
@@ -76,10 +87,10 @@ export default class TeacherNamesListView extends Component {
 
 const styles = StyleSheet.create({
     container: {
-       paddingTop: ((width * 2) / 100),
+        paddingTop: ((width * 2) / 100),
         paddingBottom: ((width * 2) / 100),
         //marginLeft: ((width * .5) / 100),
-        marginTop: ((height * 8) / 100)
+        marginTop: ((height * 0) / 100),
     },
     header: {
         fontSize: ((width * 5) / 100),
@@ -90,15 +101,13 @@ const styles = StyleSheet.create({
         marginLeft: ((height * 2) / 100),
         marginRight: ((height * 2) / 100),
         marginBottom: ((height * 0.5) / 100),
-        width: width
     },
-    row:{
-        flexDirection:'row',
-        height: ((height * 8) / 100),
+    row: {
+        flexDirection: 'row',
+        //height: ((height * 8) / 100),
     },
-    block:{
-        width:((width * 3) / 100),
-        backgroundColor:'red'
+    block: {
+        width: ((width * 3) / 100)
     },
     text: {
         fontSize: ((width * 3.5) / 100),
@@ -112,21 +121,6 @@ const styles = StyleSheet.create({
         backgroundColor: 'black'
     },
     listviewcontainer: {
-        height: ((height * 85) / 100),
-    },
-    balanceText: {
-        fontSize: ((width * 4) / 100),
-        fontWeight: 'bold',
-        textAlign: 'left',
-        paddingLeft: ((width * 5) / 100),
-        color: 'black'
-    },
-    labelTextHeading: {
-        marginTop: ((height * 2) / 100),
-        color: '#FFFFFF',
-        backgroundColor: '#00826B',
-        fontFamily: 'Arial-BoldMT',
-        fontSize: ((height * 1.8) / 100),
-    },
-
+        height: ((height * 75) / 100),
+    }
 });

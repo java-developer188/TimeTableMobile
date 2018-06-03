@@ -19,6 +19,17 @@ import SelectedCoursesContainer from "../registration/SelectedCoursesContainer";
 import SelectedCoursesListView from "../registration/SelectedCoursesListView";
 import SettingsContainer from "../settings/SettingsContainer";
 import SettingsListView from "../settings/SettingsListView";
+import AddCourseListView from "../course/AddCourseListView";
+import AddCourseContainer from "../course/AddCourseContainer";
+import AddRemoveByBatchScreen from "../course/AddRemoveByBatchScreen";
+import CSTAddContainer from "../course/CSTAddContainer";
+import CSTAddListView from "../course/CSTAddListView";
+import RemoveSelectedCoursesContainer from "../course/RemoveSelectedCoursesContainer";
+import RemoveSelectedCoursesListView from "../course/RemoveSelectedCoursesListView";
+import SeatingContainer from "../student/seating/SeatingContainer";
+import SeatingListView from "../student/seating/SeatingListView";
+import AttendanceContainer from "../student/attendance/AttendanceContainer";
+import AttendanceListView from "../student/attendance/AttendanceListView";
 
  // All screens of app are defined here.
 
@@ -36,6 +47,13 @@ export const Screens = {
     WelcomeScreen: {title: 'Smart Timetable', className: WelcomeScreen, name: 'WelcomeScreen'},
     CourseNamesContainer: {title: 'Courses', className: CourseNamesContainer, name: 'CourseNamesContainer'},
     CourseNamesListView: {title: 'Courses', className: CourseNamesListView, name: 'CourseNamesListView'},
+    AddCourseContainer: {title: 'Add/Remove Courses', className: AddCourseContainer , name : 'AddCourseContainer' },
+    AddCourseListView: {title: 'Add/Remove Courses', className: AddCourseListView , name : 'AddCourseListView' },
+    AddRemoveByBatchScreen: {title: 'Add/Remove Courses', className: AddRemoveByBatchScreen , name : 'AddRemoveByBatchScreen' },
+    CSTAddContainer: {title: 'Add/Remove Courses', className: CSTAddContainer , name : 'CSTAddContainer' },
+    CSTAddListView: {title: 'Add/Remove Courses', className: CSTAddListView , name : 'CSTAddListView' },
+    RemoveSelectedCoursesContainer: {title: 'Add/Remove Courses', className: RemoveSelectedCoursesContainer , name : 'RemoveSelectedCoursesContainer' },
+    RemoveSelectedCoursesListView: {title: 'Add/Remove Courses', className: RemoveSelectedCoursesListView , name : 'RemoveSelectedCoursesListView' },
     RegistrationScreen: {title: 'Registration', className: RegistrationScreen , name : 'RegistrationScreen' },
     RegisterCourseContainer: {title: 'Registration', className: RegisterCourseContainer , name : 'RegisterCourseContainer' },
     RegisterCourseListView: {title: 'Registration', className: RegisterCourseListView , name : 'RegisterCourseListView' },
@@ -45,7 +63,11 @@ export const Screens = {
     SelectedCoursesContainer: {title: 'Selected Courses', className: SelectedCoursesContainer , name : 'SelectedCoursesContainer' },
     SelectedCoursesListView: {title: 'Selected Courses', className: SelectedCoursesListView , name : 'SelectedCoursesListView' },
     SettingsContainer: {title: 'Settings', className: SettingsContainer , name : 'SettingsContainer' },
-    SettingsListView: {title: 'Settings', className: SettingsListView , name : 'SettingsListView' }
+    SettingsListView: {title: 'Settings', className: SettingsListView , name : 'SettingsListView' },
+    SeatingContainer: {title: 'Seating', className: SeatingContainer, name: 'SeatingContainer'},
+    SeatingListView: {title: 'Seating', className: SeatingListView, name: 'SeatingListView'},
+    AttendanceContainer: {title: 'Smart Timetable', className: AttendanceContainer, name: 'AttendanceContainer'},
+    AttendanceListView: {title: 'Smart Timetable', className: AttendanceListView, name: 'AttendanceListView'}
 }
 
 export class ScreenClass {

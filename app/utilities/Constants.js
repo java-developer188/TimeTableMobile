@@ -13,7 +13,9 @@ class Constants {
     //current user
     static USER = 'current_user';
     static STUDENT_TIMETABLE = 'student_timetable';
-    static ASSIGNED_USER_ID ='assigned_user_id'
+    static ASSIGNED_USER_ID ='assigned_user_id';
+    static STUDENT_SEATING = 'student_seating';
+    static STUDENT_ATTENDANCE = 'student_attendance';
 
     //teacher
     static FACULTY_MEMBERS = 'faculty_members';
@@ -24,6 +26,7 @@ class Constants {
     static COURSES_BY_BATCH = 'courses_by_batch';
     static COURSE_SECTION_TEACHER = 'cst';
     static SELECTED_COURSES = 'selected_courses';
+    static FINAL_SELECTED_COURSES = 'final_selected_courses';
 
     static FROM_CLASS_NAME = 'fromClass';
 

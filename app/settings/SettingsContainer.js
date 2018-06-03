@@ -19,14 +19,24 @@ export default class SettingsContainer extends Component {
         super(props);
 
         const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
-        var settings = [{"name": "Set Server IP", "value": 0}
-            , {"name": "Change Password", "value": 1}];
+        var settings ;
+        var student = SessionManager.getSessionValue(Constants.USER)
+        var studentId = -1;
+        if(student){
+            studentId = JSON.parse(student).id;
+            settings  = [{"name": "Set Server IP", "value": 0}
+                , {"name": "Change Password", "value": 1}];
+        }
+        else{
+            settings  = [{"name": "Set Server IP", "value": 0}];
+        }
         this.state = {
             dataSource: ds.cloneWithRows(settings),
             serverIpModal: false,
             changePasswordModal: false,
             serverIp: '',
-            username:'',
+            studentId:studentId,
+            oldPassword:'',
             newPassword: '',
             confirmPassword: '',
             isError: false,
@@ -133,10 +143,10 @@ export default class SettingsContainer extends Component {
                     <View style={styles.modalLayout}>
                         <View>
                             <TextInputCustom
-                                ref={(ref) => this.username = ref}
-                                placeholder={'Username'}
-                                secureTextEntry={false}
-                                onChangeTextCallback={val => this.setState({'username': val})}
+                                ref={(ref) => this.oldPassword = ref}
+                                placeholder={'Old Password'}
+                                secureTextEntry={true}
+                                onChangeTextCallback={val => this.setState({'oldPassword': val})}
                                 returnKeyType="next"
                                 textInputWidth={((width * 86) / 100)}
                                 // onEndEditingCallback = {() => this.password.textFocus()}
@@ -231,7 +241,8 @@ export default class SettingsContainer extends Component {
                 dismissKeyboard();
                 if (this.validatePassword()) {
                     var params = {
-                        "username": this.state.username,
+                        "studentId":this.state.studentId,
+                        "oldPassword": this.state.oldPassword,
                         "newPassword": this.state.newPassword,
                         "confirmPassword":this.state.confirmPassword
                     };
@@ -254,12 +265,16 @@ export default class SettingsContainer extends Component {
     }
 
     validatePassword() {
-        if (this.state.username === ''  || this.state.newPassword === '' || this.state.confirmPassword === '') {
+        if (this.state.oldPassword === ''  || this.state.newPassword === '' || this.state.confirmPassword === '') {
             this.setError(true, 'Fields cannot be empty');
             return false;
         }
-        else if (this.state.username.length < 6 || this.state.username.length > 20) {
-            this.setError(true, 'Username must have 6 - 20 characters');
+        // else if (this.state.username.length < 6 || this.state.username.length > 20) {
+        //     this.setError(true, 'Username must have 6 - 20 characters');
+        //     return false;
+        // }
+        else if (this.state.oldPassword.length < 8) {
+            this.setError(true, 'Old Password cannot be less than 8 characters');
             return false;
         }
         else if (this.state.newPassword.length < 8) {

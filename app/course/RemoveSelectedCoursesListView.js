@@ -10,10 +10,9 @@ import {
 } from 'react-native'
 const {width, height} = Dimensions.get("window");
 var color = ['#FF8563','#716B99','#20B5A3','#FF6073','#CEE271'];
-// Showing the customer accounts data row
 var topGap;
 
-export default class TeacherNamesListView extends Component {
+export default class RemoveSelectedCoursesListView extends Component {
 
     constructor(props) {
         super(props);
@@ -22,9 +21,7 @@ export default class TeacherNamesListView extends Component {
             dataSource: this.props.dataSource,
             showHeader: this.props.showHeader,
             headerText: this.props.headerText,
-            onPress: this.props.onpress,
         }
-
     }
 
     static defaultProps = {
@@ -35,16 +32,31 @@ export default class TeacherNamesListView extends Component {
 
 
     renderRow =  (rowData,rowID) => (
-        <TouchableHighlight underlayColor='gainsboro' onPress={() => {
-            this.state.onPress(rowData)
-        }}>
             <View style={styles.row}>
-                <View style={[styles.block, {backgroundColor: color[rowID%5]}]}/>
-                <Text style={styles.header}>
-                    {rowData.name}
-                </Text>
+                <View style={[styles.blockOne, {backgroundColor: color[rowID%5]}]}>
+                    <Text style={styles.boldText}>
+                        {rowData.courseCode}
+                    </Text>
+                </View>
+
+                <View style={styles.blockTwo}>
+                    <Text style={styles.balanceText}>
+                        {rowData.fullname}
+                    </Text>
+                    <Text style={styles.text}>
+                        {rowData.teacher}
+                    </Text>
+                </View>
+
+                <View style={styles.blockThree}>
+                    <Text style={styles.text}>
+                        Section:
+                    </Text>
+                    <Text style={styles.sectionText} >
+                        {rowData.section}
+                    </Text>
+                </View>
             </View>
-        </TouchableHighlight>
     );
 
 
@@ -79,7 +91,7 @@ const styles = StyleSheet.create({
        paddingTop: ((width * 2) / 100),
         paddingBottom: ((width * 2) / 100),
         //marginLeft: ((width * .5) / 100),
-        marginTop: ((height * 8) / 100)
+        marginTop: ((height * 8) / 100),
     },
     header: {
         fontSize: ((width * 5) / 100),
@@ -87,24 +99,53 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         color: 'black',
         marginTop: ((height * 3) / 100),
-        marginLeft: ((height * 2) / 100),
-        marginRight: ((height * 2) / 100),
-        marginBottom: ((height * 0.5) / 100),
-        width: width
+        marginLeft: ((height * 2) / 100)
     },
     row:{
         flexDirection:'row',
-        height: ((height * 8) / 100),
+       // height: ((height * 10) / 100),
     },
-    block:{
-        width:((width * 3) / 100),
-        backgroundColor:'red'
+    blockOne:{
+        flex:2,
+        justifyContent:'center',
+        alignItems:'center',
+        backgroundColor: 'red',
+    },
+    blockTwo:{
+        flex:4,
+        marginTop: ((height * 3) / 100),
+        marginLeft: ((height * 1.5) / 100)
+    },
+    blockThree:{
+        width:undefined,
+        flex:3,
+        justifyContent:'center',
+        alignItems:'center',
+    },
+    boldText: {
+        fontSize: ((width * 4.5) / 100),
+        textAlign: 'left',
+        color: 'black',
+        fontWeight:'bold',
+        marginTop: ((height * 3) / 100),
     },
     text: {
         fontSize: ((width * 3.5) / 100),
         textAlign: 'left',
         color: 'black',
-        marginTop: ((height * 1) / 100)
+        marginTop: ((height * 1) / 100),
+        paddingLeft: ((width * 5) / 100),
+    },
+    sectionText: {
+        marginTop: ((height * 1) / 100),
+        marginBottom: ((height * 1) / 100),
+        marginLeft: ((height * 0.5) / 100),
+        marginRight: ((height * 0.5) / 100),
+        fontWeight:'bold',
+        color: 'black',
+        fontSize: ((width * 4.5) / 100),
+        justifyContent:'center',
+        alignItems:'center',
     },
     separator: {
         flex: 1,

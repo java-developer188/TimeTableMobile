@@ -13,7 +13,7 @@ var color = ['#FF8563','#716B99','#20B5A3','#FF6073','#CEE271'];
 // Showing the customer accounts data row
 var topGap;
 
-export default class TeacherNamesListView extends Component {
+export default class SeatingListView extends Component {
 
     constructor(props) {
         super(props);
@@ -34,17 +34,36 @@ export default class TeacherNamesListView extends Component {
     }
 
 
-    renderRow =  (rowData,rowID) => (
-        <TouchableHighlight underlayColor='gainsboro' onPress={() => {
-            this.state.onPress(rowData)
-        }}>
-            <View style={styles.row}>
-                <View style={[styles.block, {backgroundColor: color[rowID%5]}]}/>
-                <Text style={styles.header}>
-                    {rowData.name}
+    renderRow = (rowData,rowID) => (
+
+        <View style={styles.row}>
+            <View style={[styles.blockOne, {backgroundColor: color[rowID%5]}]}>
+                <Text style={styles.text}>
+                    Timing
+                </Text>
+                <Text>
+                    {rowData.time}
                 </Text>
             </View>
-        </TouchableHighlight>
+
+            <View style={styles.blockTwo}>
+                <Text style={styles.text}>
+                    Room
+                </Text>
+                <Text style={styles.textBottom}>
+                    {rowData.room}
+                </Text>
+            </View>
+
+            <View style={styles.blockThree}>
+                <Text style={styles.boldText}>
+                    {rowData.course}
+                </Text>
+            </View>
+
+
+
+        </View>
     );
 
 
@@ -76,35 +95,42 @@ export default class TeacherNamesListView extends Component {
 
 const styles = StyleSheet.create({
     container: {
-       paddingTop: ((width * 2) / 100),
-        paddingBottom: ((width * 2) / 100),
-        //marginLeft: ((width * .5) / 100),
-        marginTop: ((height * 8) / 100)
+        paddingTop: ((width * 2) / 100),
+        marginLeft: ((width * 0) / 100),
+        marginTop:((height *9) / 100),
     },
-    header: {
-        fontSize: ((width * 5) / 100),
-        textAlign: 'left',
-        fontWeight: 'bold',
-        color: 'black',
-        marginTop: ((height * 3) / 100),
-        marginLeft: ((height * 2) / 100),
-        marginRight: ((height * 2) / 100),
-        marginBottom: ((height * 0.5) / 100),
-        width: width
-    },
-    row:{
+    row: {
         flexDirection:'row',
-        height: ((height * 8) / 100),
     },
-    block:{
-        width:((width * 3) / 100),
-        backgroundColor:'red'
+    blockOne:{
+        flex:2,
+        alignItems:'center',
+        backgroundColor: 'red',
+    },
+    blockTwo:{
+        flex:2,
+        alignItems:'center',
+        marginLeft: ((height * 2) / 100)
+    },
+    blockThree:{
+        flex:4,
+        alignItems:'center',
+    },
+    boldText: {
+        fontSize: ((width * 3.5) / 100),
+        textAlign: 'left',
+        color: 'black',
+        fontWeight:'bold',
+        marginTop: ((height * 4) / 100),
     },
     text: {
         fontSize: ((width * 3.5) / 100),
         textAlign: 'left',
         color: 'black',
-        marginTop: ((height * 1) / 100)
+        marginTop: ((height * 4) / 100),
+    },
+    textBottom: {
+        marginBottom: ((height * 2) / 100),
     },
     separator: {
         flex: 1,

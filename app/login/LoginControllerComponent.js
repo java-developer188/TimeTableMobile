@@ -89,7 +89,7 @@ export class LoginContainer extends Component {
             "token":token
         };
         this.webservicemanager.callWebService("student/gcm", "", params, (response) => {
-            alert("Token send successfully");
+          //  alert("Token send successfully");
         });
     }
     buttonsHandler(type) {
@@ -155,7 +155,7 @@ export class LoginContainer extends Component {
 
 
     handleErrorResponse(data) {
-        alert(data.errorDescription);
+        alert(JSON.stringify(data.errorDescription));
     }
 
     /* handle the web service successfull response error

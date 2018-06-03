@@ -121,7 +121,7 @@ export class WebServiceCallManager extends Component {
                         {cancelable: false}
                     )
                 },
-                100
+                10
             );
         }
 

@@ -66,7 +66,7 @@ export class NavigationManager extends Component {
     homescreen = (
         <View style={styles.rightButton}>
             <TouchableOpacity onPress={() => {
-                this.nav.popToRoute(Screens.HomeScreen)
+                this.nav.popToRoute(Screens.WelcomeScreen)
             }}>
                 <Text style={styles.rightButtonTitle}>{'Home'}</Text>
             </TouchableOpacity>
@@ -123,7 +123,10 @@ export class NavigationManager extends Component {
         RightButton: (route, navigator, index, navState) => {
 
             if (route === Screens.LoginScreen || route === Screens.SettingsContainer ||
-                route === Screens.RegistrationScreen) {
+                route === Screens.RegistrationScreen || route === Screens.CoursesByBatchScreen ||
+                route === Screens.CSTContainer || route === Screens.CSTListView ||
+                route === Screens.RegisterCourseContainer || route === Screens.RegisterCourseListView ||
+                route === Screens.SelectedCoursesContainer || route === Screens.SelectedCoursesListView) {
                 return null;
             }
             else if (route === Screens.WelcomeScreen) {

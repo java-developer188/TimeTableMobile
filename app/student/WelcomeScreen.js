@@ -64,7 +64,7 @@ export default class WelcomeScreen extends Component {
             "token":token
         };
         this.webservicemanager.callWebService("student/gcm", "", params, (response) => {
-            alert("Token send successfully");
+           // alert("Token send successfully");
         });
     }
 
@@ -98,6 +98,27 @@ export default class WelcomeScreen extends Component {
         }
     }
 
+    handleSelectedCoursesCallResponse(data) {
+        if (data.CST !== null && data.CST.length > 0) {
+            SessionManager.setSessionValue(Constants.FINAL_SELECTED_COURSES, data);
+            this.props.navigator.push(Screens.AddRemoveByBatchScreen);
+        }
+    }
+
+    handleSeatingCallResponse(data) {
+        if (data.Seating !== null && data.Seating.length > 0) {
+            SessionManager.setSessionValue(Constants.STUDENT_SEATING, data);
+            this.props.navigator.push(Screens.SeatingContainer);
+        }
+    }
+
+    handleAttendanceCallResponse(data) {
+        if (data.Attendance !== null && data.Attendance.length > 0) {
+            SessionManager.setSessionValue(Constants.STUDENT_ATTENDANCE, data);
+            this.props.navigator.push(Screens.AttendanceContainer);
+        }
+    }
+
     actPressButton(item) {
         //   clearTimeout(timer);
 
@@ -122,17 +143,53 @@ export default class WelcomeScreen extends Component {
             });
         }
 
-        else if (item === Screens.CourseNamesContainer) {
+        else if (item === Screens.AddRemoveByBatchScreen) {
 
-            var params = {};
-            this.webservicemanager.callWebService("courses", "", params, (response) => {
-                this.handleCoursesCallResponse(response);
-            });
+            var student = SessionManager.getSessionValue(Constants.USER)
+
+            var params = {
+                "id": JSON.parse(student).id
+            };
+            this.webservicemanager.callWebService("courses/selected", "", params, (response) => {
+                this.handleSelectedCoursesCallResponse(response);
+            }, (response) => {
+                this.handleErrorResponse(response);
+            },);
+        }
+        else if (item === Screens.SeatingContainer) {
+
+            var student = SessionManager.getSessionValue(Constants.USER)
+
+            var params = {
+                "id": JSON.parse(student).id
+            };
+            this.webservicemanager.callWebService("student/seating", "", params, (response) => {
+                this.handleSeatingCallResponse(response);
+            }, (response) => {
+                this.handleErrorResponse(response);
+            },);
+        }
+        else if (item === Screens.AttendanceContainer) {
+
+            var student = SessionManager.getSessionValue(Constants.USER)
+
+            var params = {
+                "id": JSON.parse(student).id
+            };
+            this.webservicemanager.callWebService("student/attendance", "", params, (response) => {
+                this.handleAttendanceCallResponse(response);
+            }, (response) => {
+                this.handleErrorResponse(response);
+            },);
         }
         else {
             this.props.navigator.push(item);
         }
 
+    }
+
+    handleErrorResponse(response){
+        alert(JSON.stringify(response.errorDescription))
     }
 
     transferPressButton(item) {
@@ -171,10 +228,10 @@ export default class WelcomeScreen extends Component {
                         </TouchableOpacity>
 
                         <TouchableOpacity onPress={() => {
-                            this.actPressButton(Screens.CourseNamesContainer)
+                            this.actPressButton(Screens.AddRemoveByBatchScreen)
                         }}>
                             <View style={ styles.buttonView}>
-                                <Text style={ styles.buttonText}>Courses</Text>
+                                <Text style={ styles.buttonText}>Add/Remove Courses</Text>
                             </View>
                         </TouchableOpacity>
 
@@ -183,6 +240,22 @@ export default class WelcomeScreen extends Component {
                         }}>
                             <View style={ styles.buttonView}>
                                 <Text style={ styles.buttonText}>My TimeTable</Text>
+                            </View>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity onPress={() => {
+                            this.actPressButton(Screens.SeatingContainer)
+                        }}>
+                            <View style={ styles.buttonView}>
+                                <Text style={ styles.buttonText}>Exam Seating</Text>
+                            </View>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity onPress={() => {
+                            this.actPressButton(Screens.AttendanceContainer)
+                        }}>
+                            <View style={ styles.buttonView}>
+                                <Text style={ styles.buttonText}>Attendance</Text>
                             </View>
                         </TouchableOpacity>
                     </View>
